@@ -1,0 +1,19 @@
+---
+
+is_debug: true
+http:
+  ip: 0.0.0.0
+  port: 8000
+postgresql:
+  host: localhost
+  port: 5440
+  database: postgres
+  username: postgres
+  password: qwerty
+jwt:
+  secret: $3cr3t
+redis:
+  host: localhost
+  port: 6380
+  password:
+  db: 0
