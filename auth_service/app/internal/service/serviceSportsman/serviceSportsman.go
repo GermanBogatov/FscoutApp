@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
 	"github.com/GermanBogatov/auth_service/internal/storage"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
 	"github.com/golang-jwt/jwt/v4"
@@ -32,14 +33,18 @@ func NewAuthServiceSportsman(storage storage.AuthorizationSportsman, logger logg
 	}
 }
 
-func (s *AuthServiceSportsman) CreateSportsman(ctx context.Context) (int, error) {
+func (s *AuthServiceSportsman) CreateSportsman(ctx context.Context, sportsman modelSportsman.SportsmanDTO) (string, error) {
+	sportsman.Time_create = time.Now()
+	sportsman.Password = generatePasswordHash(sportsman.Password)
 
-	return s.storage.CreateSportsman(ctx)
+	return s.storage.CreateSportsman(ctx, sportsman)
 }
 
-func (s *AuthServiceSportsman) GetSportsman(ctx context.Context, username, password string) error {
-	return s.storage.GetSportsman(ctx, username, generatePasswordHash(password))
+func (s *AuthServiceSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (modelSportsman.AuthDTO, error) {
+	sportsman.Password = generatePasswordHash(sportsman.Password)
+	return s.storage.GetSportsman(ctx, sportsman)
 }
+
 func (s *AuthServiceSportsman) GenerateToken(ctx context.Context, username, password string) (string, error) {
 	return "", nil
 }

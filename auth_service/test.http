@@ -1,5 +1,22 @@
+### Sign-up
 POST http://localhost:8000/auth/sportsman/sign-up
 Content-Type: application/json
 
 {
+  "name": "German",
+  "surname": "Bogatov",
+  "phone": "89527205825",
+  "email": "bogatovgrmn@gmail.com",
+  "password": "23Bogatov"
+}
+
+
+
+### Sign-in
+POST http://localhost:8000/auth/sportsman/sign-in
+Content-Type: application/json
+
+{
+  "email": "bogatovgrmn@gmail.com",
+  "password": "23Bogatov"
 }

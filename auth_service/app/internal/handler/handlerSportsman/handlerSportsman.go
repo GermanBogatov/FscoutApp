@@ -2,9 +2,11 @@ package handlerSportsman
 
 import (
 	"fmt"
+	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
 	"github.com/GermanBogatov/auth_service/internal/service"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type HandlerSportsman struct {
@@ -20,14 +22,62 @@ func NewHandlerSportsman(service service.AuthorizationSportsman, logger logging.
 }
 
 func (h *HandlerSportsman) SignUpSportsman(c *gin.Context) {
-	fmt.Println("Hello SignUpSportsman")
-	id, err := h.Service.CreateSportsman(c)
-	if err != nil {
-		panic(err)
+
+	var sportsman modelSportsman.SportsmanDTO
+
+	if err := c.BindJSON(&sportsman); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
 	}
-	fmt.Println("id:", id)
+
+	//TODO validate!!!
+
+	uuid, err := h.Service.CreateSportsman(c, sportsman)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"uuid": uuid,
+	})
 }
 
 func (h *HandlerSportsman) SignInSportsman(c *gin.Context) {
 
+	var sportsmanSign modelSportsman.SignInDTO
+
+	if err := c.BindJSON(&sportsmanSign); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	//TODO validate!!!
+	sportsman, err := h.Service.GetSportsman(c.Request.Context(), sportsmanSign)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	fmt.Println("authDTO cheeck:", sportsman)
+	//TODO jwt token
+}
+
+// получение всех данных спортсмена после аутент
+func (h *HandlerSportsman) GetSportsman(c *gin.Context) {
+
+	var sportsmanSign modelSportsman.SignInDTO
+
+	if err := c.BindJSON(&sportsmanSign); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	sportsman, err := h.Service.GetSportsman(c.Request.Context(), sportsmanSign)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, sportsman)
 }

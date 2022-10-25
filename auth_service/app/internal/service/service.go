@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
 	"github.com/GermanBogatov/auth_service/internal/service/serviceAdmin"
 	"github.com/GermanBogatov/auth_service/internal/service/serviceScout"
 	"github.com/GermanBogatov/auth_service/internal/service/serviceSportsman"
@@ -10,8 +11,8 @@ import (
 )
 
 type AuthorizationSportsman interface {
-	CreateSportsman(ctx context.Context) (int, error)
-	GetSportsman(ctx context.Context, username, password string) error
+	CreateSportsman(ctx context.Context, sportsman modelSportsman.SportsmanDTO) (string, error)
+	GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (modelSportsman.AuthDTO, error)
 	GenerateToken(ctx context.Context, username, password string) (string, error)
 	ParseToken(ctx context.Context, token string) (int, error)
 }

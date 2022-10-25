@@ -12,6 +12,7 @@ import (
 type HandlerSportsman interface {
 	SignUpSportsman(c *gin.Context)
 	SignInSportsman(c *gin.Context)
+	GetSportsman(c *gin.Context)
 }
 type HandlerScout interface {
 	SignUpScout(c *gin.Context)
@@ -40,23 +41,27 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
 
-	authSportsman := router.Group("/auth/sportsman")
+	auth := router.Group("/auth")
 	{
-		authSportsman.POST("/sign-up", h.SignUpSportsman)
-		authSportsman.POST("/sign-in", h.SignInSportsman)
-		//	auth.POST("/refresh=:refresh_token", h.refresh)
-	}
-	authScout := router.Group("/auth/scout")
-	{
-		authScout.POST("/sign-up", h.SignUpScout)
-		authScout.POST("/sign-in", h.SignInScout)
-		//	auth.POST("/refresh=:refresh_token", h.refresh)
-	}
-	authAdmin := router.Group("/auth/fscout/admin")
-	{
-		authAdmin.POST("/sign-up", h.SignUpAdmin)
-		authAdmin.POST("/sign-in", h.SignInAdmin)
-		//	auth.POST("/refresh=:refresh_token", h.refresh)
+		sportsman := auth.Group("/sportsman")
+		{
+			sportsman.POST("/sign-up", h.SignUpSportsman)
+			sportsman.POST("/sign-in", h.SignInSportsman)
+		}
+
+		scout := router.Group("/scout")
+		{
+			scout.POST("/sign-up", h.SignUpScout)
+			scout.POST("/sign-in", h.SignInScout)
+			//	auth.POST("/refresh=:refresh_token", h.refresh)
+		}
+		admin := router.Group("fscout/admin")
+		{
+			admin.POST("/sign-up", h.SignUpAdmin)
+			admin.POST("/sign-in", h.SignInAdmin)
+			//	auth.POST("/refresh=:refresh_token", h.refresh)
+		}
+
 	}
 
 	return router
