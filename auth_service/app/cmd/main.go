@@ -8,6 +8,7 @@ import (
 	"github.com/GermanBogatov/auth_service/internal/handler"
 	"github.com/GermanBogatov/auth_service/internal/service"
 	"github.com/GermanBogatov/auth_service/internal/storage"
+	"github.com/GermanBogatov/auth_service/pkg/jwt"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
 	"github.com/GermanBogatov/auth_service/pkg/postgresql"
 	"github.com/GermanBogatov/auth_service/pkg/redis"
@@ -33,9 +34,9 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
-	fmt.Println(RedisClient)
-	//logger.Println("JWT Helper initializing...")
-	//NewHelper := jwt.NewHelper(logger, RedisClient)
+
+	logger.Println("JWT Helper initializing...")
+	NewHelper := jwt.NewHelper(logger, RedisClient)
 
 	logger.Println("Postgresql-client initializing...")
 	PostgresqlClient, err := postgresql.NewClient(context.Background(), 5, cfg.PostgresqlDB.Username, cfg.PostgresqlDB.Password,
@@ -58,7 +59,7 @@ func main() {
 
 	logger.Println("Handler initializing...")
 
-	Handler, err := handler.NewHandler(Service, logger)
+	Handler, err := handler.NewHandler(Service, logger, NewHelper)
 	if err != nil {
 		panic(err)
 	}

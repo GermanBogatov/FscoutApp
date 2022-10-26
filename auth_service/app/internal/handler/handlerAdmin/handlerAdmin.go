@@ -2,6 +2,7 @@ package handlerAdmin
 
 import (
 	"github.com/GermanBogatov/auth_service/internal/service"
+	"github.com/GermanBogatov/auth_service/pkg/jwt"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
 	"github.com/gin-gonic/gin"
 )
@@ -9,12 +10,14 @@ import (
 type HandlerAdmin struct {
 	Service service.AuthorizationAdmin
 	Logger  logging.Logger
+	Helper  jwt.Helper
 }
 
-func NewHandlerAdmin(service service.AuthorizationAdmin, logger logging.Logger) *HandlerAdmin {
+func NewHandlerAdmin(service service.AuthorizationAdmin, logger logging.Logger, helper jwt.Helper) *HandlerAdmin {
 	return &HandlerAdmin{
 		Service: service,
 		Logger:  logger,
+		Helper:  helper,
 	}
 }
 

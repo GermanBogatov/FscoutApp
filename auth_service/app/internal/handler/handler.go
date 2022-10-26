@@ -5,6 +5,7 @@ import (
 	"github.com/GermanBogatov/auth_service/internal/handler/handlerScout"
 	"github.com/GermanBogatov/auth_service/internal/handler/handlerSportsman"
 	"github.com/GermanBogatov/auth_service/internal/service"
+	"github.com/GermanBogatov/auth_service/pkg/jwt"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
 	"github.com/gin-gonic/gin"
 )
@@ -28,11 +29,11 @@ type Handler struct {
 	HandlerAdmin
 }
 
-func NewHandler(services *service.Service, logger logging.Logger) (*Handler, error) {
+func NewHandler(services *service.Service, logger logging.Logger, helper jwt.Helper) (*Handler, error) {
 	return &Handler{
-		HandlerSportsman: handlerSportsman.NewHandlerSportsman(services.AuthorizationSportsman, logger),
-		HandlerScout:     handlerScout.NewHandlerScout(services.AuthorizationScout, logger),
-		HandlerAdmin:     handlerAdmin.NewHandlerAdmin(services.AuthorizationAdmin, logger),
+		HandlerSportsman: handlerSportsman.NewHandlerSportsman(services.AuthorizationSportsman, logger, helper),
+		HandlerScout:     handlerScout.NewHandlerScout(services.AuthorizationScout, logger, helper),
+		HandlerAdmin:     handlerAdmin.NewHandlerAdmin(services.AuthorizationAdmin, logger, helper),
 	}, nil
 }
 
