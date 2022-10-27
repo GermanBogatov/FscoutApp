@@ -27,9 +27,3 @@ type SignInDTO struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
-
-type AuthDTO struct {
-	Sportsman_uuid string
-	Email          string
-	Role           string
-}

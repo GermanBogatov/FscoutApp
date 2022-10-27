@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"github.com/GermanBogatov/auth_service/internal/model"
 	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
 	"github.com/GermanBogatov/auth_service/internal/storage/storageAdmin"
 	"github.com/GermanBogatov/auth_service/internal/storage/storageScout"
@@ -12,7 +13,7 @@ import (
 
 type AuthorizationSportsman interface {
 	CreateSportsman(ctx context.Context, sportsman modelSportsman.SportsmanDTO) (string, error)
-	GetSportsman(ctx context.Context, sportsmanSign modelSportsman.SignInDTO) (modelSportsman.AuthDTO, error)
+	GetSportsman(ctx context.Context, sportsmanSign modelSportsman.SignInDTO) (model.AuthDTO, error)
 }
 
 type AuthorizationScout interface {

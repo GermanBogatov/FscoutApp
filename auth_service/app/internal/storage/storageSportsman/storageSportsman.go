@@ -3,6 +3,7 @@ package storageSportsman
 import (
 	"context"
 	"fmt"
+	"github.com/GermanBogatov/auth_service/internal/model"
 	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
 	"github.com/GermanBogatov/auth_service/pkg/postgresql"
@@ -67,37 +68,63 @@ func (r *repositoryAuthSportsman) CreateSportsman(ctx context.Context, sportsman
 
 }
 
-func (r *repositoryAuthSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (modelSportsman.AuthDTO, error) {
-
-	tx, err := r.client.Begin(ctx)
-	if err != nil {
-		tx.Rollback(ctx)
-		return modelSportsman.AuthDTO{}, err
-	}
-	defer tx.Commit(ctx)
+func (r *repositoryAuthSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (model.AuthDTO, error) {
 
 	q := `
-			SELECT sportsman_uuid, role_uuid, email
-			FROM sportsman
-			WHERE email=$1 AND password=$2
-				`
-	var sportsmanAuth modelSportsman.AuthDTO
+	SELECT
+		sp.sportsman_uuid, sp.email, ro.name
+	FROM
+		sportsman sp
+	INNER JOIN
+		role ro on ro.role_uuid = sp.role_uuid
+	WHERE 
+		sp.email = $1
+	AND
+		sp.password = $2
+		`
 
-	err = tx.QueryRow(ctx, q, sportsman.Email, sportsman.Password).Scan(&sportsmanAuth.Sportsman_uuid, &sportsmanAuth.Role, &sportsmanAuth.Email)
+	var sportsmanAuth model.AuthDTO
+
+	err := r.client.QueryRow(ctx, q, sportsman.Email, sportsman.Password).Scan(&sportsmanAuth.Uuid, &sportsmanAuth.Email, &sportsmanAuth.Role)
 	if err != nil {
-		tx.Rollback(ctx)
-		return modelSportsman.AuthDTO{}, err
+		return model.AuthDTO{}, err
 	}
 
-	role := `
-				SELECT name
-				FROM role
-				WHERE role_uuid=$1
-			`
-	err = tx.QueryRow(ctx, role, sportsmanAuth.Role).Scan(&sportsmanAuth.Role)
-	if err != nil {
-		tx.Rollback(ctx)
-		return modelSportsman.AuthDTO{}, err
-	}
+	fmt.Println("storage: ", sportsmanAuth)
 	return sportsmanAuth, nil
 }
+
+//func (r *repositoryAuthSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (model.AuthDTO, error) {
+//
+//	tx, err := r.client.Begin(ctx)
+//	if err != nil {
+//		tx.Rollback(ctx)
+//		return model.AuthDTO{}, err
+//	}
+//	defer tx.Commit(ctx)
+//
+//	q := `
+//			SELECT sportsman_uuid, role_uuid, email
+//			FROM sportsman
+//			WHERE email=$1 AND password=$2
+//				`
+//	var sportsmanAuth model.AuthDTO
+//
+//	err = tx.QueryRow(ctx, q, sportsman.Email, sportsman.Password).Scan(&sportsmanAuth.Uuid, &sportsmanAuth.Role, &sportsmanAuth.Email)
+//	if err != nil {
+//		tx.Rollback(ctx)
+//		return model.AuthDTO{}, err
+//	}
+//
+//	role := `
+//				SELECT name
+//				FROM role
+//				WHERE role_uuid=$1
+//			`
+//	err = tx.QueryRow(ctx, role, sportsmanAuth.Role).Scan(&sportsmanAuth.Role)
+//	if err != nil {
+//		tx.Rollback(ctx)
+//		return model.AuthDTO{}, err
+//	}
+//	return sportsmanAuth, nil
+//}

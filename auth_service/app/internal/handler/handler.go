@@ -14,6 +14,7 @@ type HandlerSportsman interface {
 	SignUpSportsman(c *gin.Context)
 	SignInSportsman(c *gin.Context)
 	GetSportsman(c *gin.Context)
+	RefreshToken(c *gin.Context)
 }
 type HandlerScout interface {
 	SignUpScout(c *gin.Context)
@@ -48,6 +49,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			sportsman.POST("/sign-up", h.SignUpSportsman)
 			sportsman.POST("/sign-in", h.SignInSportsman)
+			auth.POST("/refresh=:refresh_token", h.RefreshToken)
 		}
 
 		scout := router.Group("/scout")

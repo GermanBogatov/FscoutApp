@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/GermanBogatov/auth_service/internal/config"
-	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
+	"github.com/GermanBogatov/auth_service/internal/model"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
 	"github.com/go-redis/redis/v8"
 	"github.com/golang-jwt/jwt/v4"
@@ -36,7 +36,7 @@ func NewHelper(logger logging.Logger, client *redis.Client) Helper {
 }
 
 type Helper interface {
-	GenerateAccessToken(u modelSportsman.AuthDTO) (string, string, error)
+	GenerateAccessToken(u model.AuthDTO) (string, string, error)
 	UpdateRefreshToken(refreshToken string) (string, string, error)
 }
 
@@ -46,7 +46,7 @@ func (h *helper) UpdateRefreshToken(refreshToken string) (string, string, error)
 
 	userBytes := h.clientRedis.Get(context.Background(), refreshToken)
 
-	var u modelSportsman.AuthDTO
+	var u model.AuthDTO
 	err := json.Unmarshal([]byte(userBytes.Val()), &u)
 	if err != nil {
 		return "", "", err
@@ -57,12 +57,12 @@ func (h *helper) UpdateRefreshToken(refreshToken string) (string, string, error)
 
 }
 
-func (h *helper) GenerateAccessToken(u modelSportsman.AuthDTO) (string, string, error) {
+func (h *helper) GenerateAccessToken(u model.AuthDTO) (string, string, error) {
 	key := []byte(config.GetConfig().JWT.Secret)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &UserClaims{
 		StandardClaims: jwt.StandardClaims{
-			Id:        u.Sportsman_uuid,
+			Id:        u.Uuid,
 			Audience:  u.Role,
 			ExpiresAt: time.Now().Add(60 * time.Minute).Unix(),
 		},

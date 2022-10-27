@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"github.com/GermanBogatov/auth_service/internal/model"
 	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
 	"github.com/GermanBogatov/auth_service/internal/storage"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
@@ -40,7 +41,7 @@ func (s *AuthServiceSportsman) CreateSportsman(ctx context.Context, sportsman mo
 	return s.storage.CreateSportsman(ctx, sportsman)
 }
 
-func (s *AuthServiceSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (modelSportsman.AuthDTO, error) {
+func (s *AuthServiceSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (model.AuthDTO, error) {
 	sportsman.Password = generatePasswordHash(sportsman.Password)
 	return s.storage.GetSportsman(ctx, sportsman)
 }
