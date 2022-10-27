@@ -26,3 +26,11 @@ Content-Type: application/json
 POST http://localhost:8000/auth/sportsman/refresh=dd7e03e1-8000-40c6-a722-e1bd064e2b65
 Content-Type: application/json
 
+
+### get sportsman
+GET http://localhost:8000/sportsman
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzcG9ydHNtYW4iLCJleHAiOjE2NjY5MDQ1MDYsImp0aSI6Ijk4Njg4ZjFjLTlmZTEtNGJhMy1iMDgwLWVkYmE2ZDczZjFmYyIsImVtYWlsIjoiYm9nYXRvdmdybW5AZ21haWwuY29tIn0.gM9A9a96bKiJIiNQmlzFF2wMqlVm8uAq6PMkj2VoRV0
+
+{
+}

@@ -58,7 +58,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			scout.POST("/sign-in", h.SignInScout)
 			//	auth.POST("/refresh=:refresh_token", h.refresh)
 		}
-		admin := router.Group("fscout/admin")
+		admin := router.Group("/fscout/admin")
 		{
 			admin.POST("/sign-up", h.SignUpAdmin)
 			admin.POST("/sign-in", h.SignInAdmin)
@@ -67,5 +67,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	}
 
+	user := router.Group("/sportsman")
+	{
+		user.Use(jwt.MiddlewareSportsman())
+		user.GET("/", h.GetSportsman)
+	}
 	return router
 }

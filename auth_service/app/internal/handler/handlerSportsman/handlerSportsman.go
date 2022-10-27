@@ -93,19 +93,19 @@ func (h *HandlerSportsman) RefreshToken(c *gin.Context) {
 
 // получение всех данных спортсмена после аутент
 func (h *HandlerSportsman) GetSportsman(c *gin.Context) {
+	fmt.Println("KooL!")
+	/*	var sportsmanSign modelSportsman.SignInDTO
 
-	var sportsmanSign modelSportsman.SignInDTO
+		if err := c.BindJSON(&sportsmanSign); err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+			return
+		}
 
-	if err := c.BindJSON(&sportsmanSign); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
-		return
-	}
+		sportsman, err := h.Service.GetSportsman(c.Request.Context(), sportsmanSign)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+			return
+		}
 
-	sportsman, err := h.Service.GetSportsman(c.Request.Context(), sportsmanSign)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, sportsman)
+		c.JSON(http.StatusOK, sportsman)*/
 }
