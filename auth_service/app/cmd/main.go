@@ -24,9 +24,9 @@ func main() {
 
 	logging.Init()
 	logger := logging.GetLogger()
-	logger.Println("logger initialized...")
+	logger.Println("Logger initialized...")
 
-	logger.Println(" config initializing...")
+	logger.Println(" Config initializing...")
 	cfg := config.GetConfig()
 
 	logger.Println("Redis-client initializing...")
@@ -35,7 +35,7 @@ func main() {
 		logger.Fatal(err)
 	}
 
-	logger.Println("JWT Helper initializing...")
+	logger.Println("JWT-Helper initializing...")
 	NewHelper := jwt.NewHelper(logger, RedisClient)
 
 	logger.Println("Postgresql-client initializing...")
@@ -64,7 +64,7 @@ func main() {
 		panic(err)
 	}
 
-	logger.Println("start application...")
+	logger.Println("Start application...")
 	start(Handler.InitRoutes(), logger, cfg)
 }
 

@@ -16,14 +16,10 @@ type SportsmanDTO struct {
 	State          string    `json:"state"`
 	Index          int       `json:"index"`
 	Birthday       time.Time `json:"birthday"`
+	Gender         string    `json:"gender"`
 	Height         string    `json:"height"`
 	Weight         string    `json:"weight"`
 	Strong_leg     string    `json:"strong_Leg"`
 	Time_create    time.Time `json:"time_create"`
 	Role_uuid      string    `json:"role_uuid"`
-}
-
-type SignInDTO struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
 }

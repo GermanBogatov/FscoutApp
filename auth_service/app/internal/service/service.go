@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/GermanBogatov/auth_service/internal/model"
+	"github.com/GermanBogatov/auth_service/internal/model/modelScout"
 	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
 	"github.com/GermanBogatov/auth_service/internal/service/serviceAdmin"
 	"github.com/GermanBogatov/auth_service/internal/service/serviceScout"
@@ -13,14 +14,14 @@ import (
 
 type AuthorizationSportsman interface {
 	CreateSportsman(ctx context.Context, sportsman modelSportsman.SportsmanDTO) (string, error)
-	GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (model.AuthDTO, error)
+	SignInSportsman(ctx context.Context, sportsman model.SignInDTO) (model.AuthDTO, error)
 	GenerateToken(ctx context.Context, username, password string) (string, error)
 	ParseToken(ctx context.Context, token string) (int, error)
 }
 
 type AuthorizationScout interface {
-	CreateScout(ctx context.Context) (int, error)
-	GetScout(ctx context.Context, username, password string) error
+	CreateScout(ctx context.Context, scout modelScout.ScoutDTO) (string, error)
+	SignInScout(ctx context.Context, scout model.SignInDTO) (model.AuthDTO, error)
 	GenerateToken(ctx context.Context, username, password string) (string, error)
 	ParseToken(ctx context.Context, token string) (int, error)
 }

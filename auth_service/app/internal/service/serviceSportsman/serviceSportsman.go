@@ -41,9 +41,9 @@ func (s *AuthServiceSportsman) CreateSportsman(ctx context.Context, sportsman mo
 	return s.storage.CreateSportsman(ctx, sportsman)
 }
 
-func (s *AuthServiceSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (model.AuthDTO, error) {
+func (s *AuthServiceSportsman) SignInSportsman(ctx context.Context, sportsman model.SignInDTO) (model.AuthDTO, error) {
 	sportsman.Password = generatePasswordHash(sportsman.Password)
-	return s.storage.GetSportsman(ctx, sportsman)
+	return s.storage.SignInSportsman(ctx, sportsman)
 }
 
 func (s *AuthServiceSportsman) GenerateToken(ctx context.Context, username, password string) (string, error) {

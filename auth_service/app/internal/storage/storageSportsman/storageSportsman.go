@@ -36,10 +36,11 @@ func (r *repositoryAuthSportsman) CreateSportsman(ctx context.Context, sportsman
 
 	role := `
 				SELECT role_uuid
-				FROM role
+				FROM Roles
 				WHERE name=$1
 			`
-	if err := tx.QueryRow(ctx, role, roleSportsman).Scan(&sportsman.Role_uuid); err != nil {
+	var roleUUID string
+	if err := tx.QueryRow(ctx, role, roleSportsman).Scan(&roleUUID); err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
 			newErr := fmt.Errorf(fmt.Sprintf("SQL Error: %s, Detail: %s, Where: %s, Code: %s, SQLState: %s", pgErr.Message, pgErr.Detail, pgErr.Where, pgErr.Code, pgErr.SQLState()))
 			r.logger.Error(newErr)
@@ -49,14 +50,14 @@ func (r *repositoryAuthSportsman) CreateSportsman(ctx context.Context, sportsman
 	}
 
 	q := `
-		    INSERT INTO sportsman
+		    INSERT INTO Sportsman
 		    	(name,surname,phone,email,password,time_create,role_uuid)
 		    VALUES
 				($1,$2,$3,$4,$5,$6,$7)
 		    RETURNING sportsman_uuid
 				`
 
-	if err := tx.QueryRow(ctx, q, sportsman.Name, sportsman.Surname, sportsman.Phone, sportsman.Email, sportsman.Password, sportsman.Time_create, sportsman.Role_uuid).Scan(&sportsman.Sportsman_uuid); err != nil {
+	if err := tx.QueryRow(ctx, q, sportsman.Name, sportsman.Surname, sportsman.Phone, sportsman.Email, sportsman.Password, sportsman.Time_create, roleUUID).Scan(&sportsman.Sportsman_uuid); err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
 			newErr := fmt.Errorf(fmt.Sprintf("SQL Error: %s, Detail: %s, Where: %s, Code: %s, SQLState: %s", pgErr.Message, pgErr.Detail, pgErr.Where, pgErr.Code, pgErr.SQLState()))
 			r.logger.Error(newErr)
@@ -68,15 +69,15 @@ func (r *repositoryAuthSportsman) CreateSportsman(ctx context.Context, sportsman
 
 }
 
-func (r *repositoryAuthSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (model.AuthDTO, error) {
+func (r *repositoryAuthSportsman) SignInSportsman(ctx context.Context, sportsman model.SignInDTO) (model.AuthDTO, error) {
 
 	q := `
 	SELECT
 		sp.sportsman_uuid, sp.email, ro.name
 	FROM
-		sportsman sp
+		Sportsman sp
 	INNER JOIN
-		role ro on ro.role_uuid = sp.role_uuid
+		Roles ro on ro.role_uuid = sp.role_uuid
 	WHERE 
 		sp.email = $1
 	AND
@@ -90,41 +91,5 @@ func (r *repositoryAuthSportsman) GetSportsman(ctx context.Context, sportsman mo
 		return model.AuthDTO{}, err
 	}
 
-	fmt.Println("storage: ", sportsmanAuth)
 	return sportsmanAuth, nil
 }
-
-//func (r *repositoryAuthSportsman) GetSportsman(ctx context.Context, sportsman modelSportsman.SignInDTO) (model.AuthDTO, error) {
-//
-//	tx, err := r.client.Begin(ctx)
-//	if err != nil {
-//		tx.Rollback(ctx)
-//		return model.AuthDTO{}, err
-//	}
-//	defer tx.Commit(ctx)
-//
-//	q := `
-//			SELECT sportsman_uuid, role_uuid, email
-//			FROM sportsman
-//			WHERE email=$1 AND password=$2
-//				`
-//	var sportsmanAuth model.AuthDTO
-//
-//	err = tx.QueryRow(ctx, q, sportsman.Email, sportsman.Password).Scan(&sportsmanAuth.Uuid, &sportsmanAuth.Role, &sportsmanAuth.Email)
-//	if err != nil {
-//		tx.Rollback(ctx)
-//		return model.AuthDTO{}, err
-//	}
-//
-//	role := `
-//				SELECT name
-//				FROM role
-//				WHERE role_uuid=$1
-//			`
-//	err = tx.QueryRow(ctx, role, sportsmanAuth.Role).Scan(&sportsmanAuth.Role)
-//	if err != nil {
-//		tx.Rollback(ctx)
-//		return model.AuthDTO{}, err
-//	}
-//	return sportsmanAuth, nil
-//}

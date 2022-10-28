@@ -4,6 +4,8 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"github.com/GermanBogatov/auth_service/internal/model"
+	"github.com/GermanBogatov/auth_service/internal/model/modelScout"
 	"github.com/GermanBogatov/auth_service/internal/storage"
 	"github.com/GermanBogatov/auth_service/pkg/logging"
 	"github.com/golang-jwt/jwt/v4"
@@ -32,13 +34,16 @@ func NewAuthServiceScout(storage storage.AuthorizationScout, logger logging.Logg
 	}
 }
 
-func (s *AuthServiceScout) CreateScout(ctx context.Context) (int, error) {
-
-	return s.storage.CreateScout(ctx)
+func (s *AuthServiceScout) CreateScout(ctx context.Context, scout modelScout.ScoutDTO) (string, error) {
+	scout.Time_create = time.Now()
+	scout.Confirmed = false
+	scout.Password = generatePasswordHash(scout.Password)
+	return s.storage.CreateScout(ctx, scout)
 }
 
-func (s *AuthServiceScout) GetScout(ctx context.Context, username, password string) error {
-	return s.storage.GetScout(ctx, username, generatePasswordHash(password))
+func (s *AuthServiceScout) SignInScout(ctx context.Context, scoutSign model.SignInDTO) (model.AuthDTO, error) {
+	scoutSign.Password = generatePasswordHash(scoutSign.Password)
+	return s.storage.SignInScout(ctx, scoutSign)
 }
 func (s *AuthServiceScout) GenerateToken(ctx context.Context, username, password string) (string, error) {
 	return "", nil

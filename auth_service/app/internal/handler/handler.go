@@ -14,11 +14,13 @@ type HandlerSportsman interface {
 	SignUpSportsman(c *gin.Context)
 	SignInSportsman(c *gin.Context)
 	GetSportsman(c *gin.Context)
-	RefreshToken(c *gin.Context)
+	RefreshTokenSportsman(c *gin.Context)
 }
 type HandlerScout interface {
 	SignUpScout(c *gin.Context)
 	SignInScout(c *gin.Context)
+	GetScout(c *gin.Context)
+	RefreshTokenScout(c *gin.Context)
 }
 type HandlerAdmin interface {
 	SignUpAdmin(c *gin.Context)
@@ -49,14 +51,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			sportsman.POST("/sign-up", h.SignUpSportsman)
 			sportsman.POST("/sign-in", h.SignInSportsman)
-			auth.POST("/refresh=:refresh_token", h.RefreshToken)
+			sportsman.POST("/refresh=:refresh_token", h.RefreshTokenSportsman)
 		}
 
-		scout := router.Group("/scout")
+		scout := auth.Group("/scout")
 		{
 			scout.POST("/sign-up", h.SignUpScout)
 			scout.POST("/sign-in", h.SignInScout)
-			//	auth.POST("/refresh=:refresh_token", h.refresh)
+			scout.POST("/refresh=:refresh_token", h.RefreshTokenScout)
 		}
 		admin := router.Group("/fscout/admin")
 		{
@@ -67,10 +69,16 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	}
 
-	user := router.Group("/sportsman")
+	userSportsman := router.Group("/sportsman")
 	{
-		user.Use(jwt.MiddlewareSportsman())
-		user.GET("/", h.GetSportsman)
+		userSportsman.Use(jwt.MiddlewareSportsman())
+		userSportsman.GET("/", h.GetSportsman)
+	}
+
+	userScout := router.Group("/scout")
+	{
+		userScout.Use(jwt.MiddlewareScout())
+		userScout.GET("/", h.GetScout)
 	}
 	return router
 }

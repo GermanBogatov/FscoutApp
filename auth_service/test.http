@@ -34,3 +34,32 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzcG9ydHNtY
 
 {
 }
+
+### Sign-up scout
+POST http://localhost:8000/auth/scout/sign-up
+Content-Type: application/json
+
+{
+  "name": "German",
+  "surname": "Bogatov",
+  "phone": "89527205825",
+  "email": "bogatovgrmn@gmail.com",
+  "password": "23Bogatov"
+}
+
+### Sign-in Scout
+POST http://localhost:8000/auth/scout/sign-in
+Content-Type: application/json
+
+{
+  "email": "bogatovgrmn@gmail.com",
+  "password": "23Bogatov"
+}
+
+### get Scout
+GET http://localhost:8000/scout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzY291dCIsImV4cCI6MTY2Njk2MjA1NSwianRpIjoiM2ZjZWY1YzYtOGIwZi00MWJkLTgxZWYtOGFjYjc3MDEzZmY2IiwiZW1haWwiOiJib2dhdG92Z3JtbkBnbWFpbC5jb20ifQ.tysVb3AmcuUVf2gAJzWqefzCs-0GZY9mvJJ71zaGNOo
+
+{
+}

@@ -2,6 +2,7 @@ package handlerSportsman
 
 import (
 	"fmt"
+	"github.com/GermanBogatov/auth_service/internal/model"
 	"github.com/GermanBogatov/auth_service/internal/model/modelSportsman"
 	"github.com/GermanBogatov/auth_service/internal/service"
 	"github.com/GermanBogatov/auth_service/pkg/jwt"
@@ -48,7 +49,7 @@ func (h *HandlerSportsman) SignUpSportsman(c *gin.Context) {
 
 func (h *HandlerSportsman) SignInSportsman(c *gin.Context) {
 
-	var sportsmanSign modelSportsman.SignInDTO
+	var sportsmanSign model.SignInDTO
 
 	if err := c.BindJSON(&sportsmanSign); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
@@ -57,13 +58,12 @@ func (h *HandlerSportsman) SignInSportsman(c *gin.Context) {
 
 	//TODO validate!!!
 
-	sportsman, err := h.Service.GetSportsman(c.Request.Context(), sportsmanSign)
+	sportsman, err := h.Service.SignInSportsman(c.Request.Context(), sportsmanSign)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	fmt.Println("s: ", sportsman)
 	token, refreshToken, err := h.Helper.GenerateAccessToken(sportsman)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
@@ -76,7 +76,7 @@ func (h *HandlerSportsman) SignInSportsman(c *gin.Context) {
 	})
 }
 
-func (h *HandlerSportsman) RefreshToken(c *gin.Context) {
+func (h *HandlerSportsman) RefreshTokenSportsman(c *gin.Context) {
 	refresh := c.Param("refresh_token")
 
 	token, refreshToken, err := h.Helper.UpdateRefreshToken(refresh)
@@ -94,18 +94,5 @@ func (h *HandlerSportsman) RefreshToken(c *gin.Context) {
 // получение всех данных спортсмена после аутент
 func (h *HandlerSportsman) GetSportsman(c *gin.Context) {
 	fmt.Println("KooL!")
-	/*	var sportsmanSign modelSportsman.SignInDTO
 
-		if err := c.BindJSON(&sportsmanSign); err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
-			return
-		}
-
-		sportsman, err := h.Service.GetSportsman(c.Request.Context(), sportsmanSign)
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
-			return
-		}
-
-		c.JSON(http.StatusOK, sportsman)*/
 }

@@ -1,7 +1,6 @@
 
-
-
-
 DROP TABLE Sportsman;
 
-DROP TABLE Role;
+DROP TABLE Scout;
+
+DROP TABLE Roles;
